@@ -7,18 +7,25 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class CountLines1 {
-    File javaFile = null;
-    Scanner readFile = null;
-    long lineCount = 0;
+    private File javaFile = null;
+    private Scanner readFile = null;
+    private long lineCount = 0;
 
     public static void main(String[] args) {
         CountLines1 countLines = new CountLines1();
 
         countLines.openJavaFile();
-        countLines.printCodeLine();
 
-//        if (!countLines.checkForSingleLineComments())
+        while (countLines.readFile.hasNextLine() ) {
 
+            String code = countLines.readFile.nextLine();
+
+            if (countLines.checkForSingleLineComments(code)) {
+                countLines.incrementCounter();
+            }
+        }
+
+        System.out.println(countLines.getLineCount());
     }
 
     /**
@@ -49,7 +56,8 @@ public class CountLines1 {
      */
     public boolean checkForSingleLineComments(String lineOfCode) {
         boolean isComment = false;
-        String pattern = "(^//)";
+//        String pattern = "(^//)";
+        String pattern = "(//)";
         Pattern compPattern = Pattern.compile(pattern);
         Matcher m = compPattern.matcher(lineOfCode);
 
@@ -60,6 +68,11 @@ public class CountLines1 {
         return isComment;
     }
 
+    /**
+     *
+     * @param lineOfCode
+     * @return
+     */
     public boolean checkForMultiLineComments(String lineOfCode) {
         boolean isComment = false;
         String startPattern = "(^/*)";
@@ -77,5 +90,20 @@ public class CountLines1 {
             String data = readFile.nextLine();
             System.out.println(data);
         }
+    }
+
+    /**
+     *
+     */
+    public void incrementCounter() {
+        lineCount++;
+    }
+
+    /**
+     *
+     * @return
+     */
+    public long getLineCount() {
+        return lineCount;
     }
 }
